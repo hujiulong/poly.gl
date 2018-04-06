@@ -55,6 +55,8 @@ function addLocalDevSettings( config, { libAlias } ) {
 }
 
 module.exports = ( baseConfig, opts = {} ) => env => {
+    let config = baseConfig;
+
     if ( env && env.local ) {
         config = addLocalDevSettings( baseConfig, opts );
     }
