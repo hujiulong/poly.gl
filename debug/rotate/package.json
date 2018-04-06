@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "start": "webpack-dev-server --progress --hot --open -d",
+    "start-local": "webpack-dev-server --env.local --progress --hot --open -d",
+    "lib-dev": "cd ../../ & npm run build:watch",
+    "start-test": "run-p lib-dev start-local"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.2",
+    "source-map-loader": "^0.2.3",
+    "webpack": "^2.4.0",
+    "webpack-dev-server": "^2.4.0"
+  }
+}
