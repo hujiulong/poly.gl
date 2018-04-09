@@ -7,7 +7,7 @@ import Resource from './resource';
 import Buffer from './buffer';
 import { uid, isPowerOfTwo, log } from '../utils';
 import { glKey } from './gl-constants';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 // Supported min filters for NPOT texture.
 const NPOT_MIN_FILTERS = [ GL.LINEAR, GL.NEAREST ];
 
@@ -224,7 +224,7 @@ export default class Texture extends Resource {
             // Pixel store
             [ GL.UNPACK_FLIP_Y_WEBGL ]: unpackFlipY
         };
-        const glSettings = Object.assign( {}, DEFAULT_TEXTURE_SETTINGS, pixelStore );
+        const glSettings = merge( {}, DEFAULT_TEXTURE_SETTINGS, pixelStore );
 
         if ( this._isNPOT() ) {
 

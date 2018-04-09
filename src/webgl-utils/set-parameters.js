@@ -3,7 +3,7 @@
 // Provides base functionality for the state caching.
 import GL from './constants';
 import { isWebGL2 } from '../webgl/context';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 
 // DEFAULT SETTINGS - FOR FAST CACHE INITIALIZATION AND CONTEXT RESETS
 
@@ -295,7 +295,7 @@ export function setParameters( gl, values ) {
     // This is the ONLY external dependency in this module/
     const cache = gl.state && gl.state.cache;
     if ( cache ) {
-        const mergedValues = Object.assign( {}, cache, values );
+        const mergedValues = merge( {}, cache, values );
 
         for ( const key in compositeSetters ) {
             // TODO - avoid calling composite setters if values have not changed.
@@ -335,7 +335,7 @@ export function getParameters( gl, parameters ) {
 
 export function getDefaultParameters( gl ) {
     // TODO - Query GL.VIEWPORT and GL.SCISSOR_BOX since these are dynamic
-    return Object.assign( {}, GL_PARAMETER_DEFAULTS, {
+    return merge( {}, GL_PARAMETER_DEFAULTS, {
     // TODO: For viewport and scissor default values are set at the time of
     // context creation based on canvas size, we can query them here but it will
     // not match with what we have in GL_PARAMETER_DEFAULTS table, we should revisit.

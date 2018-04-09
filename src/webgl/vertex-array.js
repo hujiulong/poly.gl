@@ -2,8 +2,7 @@
 import { glKey } from './gl-constants';
 import { isWebGL2 } from './context';
 import Resource from './resource';
-import assert from '../utils/assert';
-import { log } from '../utils';
+import { assert, merge, log } from '../utils';
 
 /* eslint-disable camelcase */
 const OES_vertex_array_object = 'OES_vertex_array_object';
@@ -125,7 +124,7 @@ export default class VertexArray extends Resource {
             layout = bufferData.layout;
         } else {
             buffer = bufferData.buffer;
-            layout = Object.assign( {}, buffer.layout, bufferData.layout || {}, bufferData );
+            layout = merge( {}, buffer.layout, bufferData.layout || {}, bufferData );
         }
         return { buffer, layout };
     }

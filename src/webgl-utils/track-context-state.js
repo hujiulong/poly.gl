@@ -4,7 +4,7 @@
 import GL from './constants';
 import { setParameters, getParameters, GL_PARAMETER_DEFAULTS } from './set-parameters';
 import polyfillContext from './polyfill-context';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 
 export const clone = x => {
     return Array.isArray( x ) || ArrayBuffer.isView( x ) ? x.slice() : x;
@@ -261,7 +261,7 @@ class GLState {
         this.gl = gl;
         this.stateStack = [];
         this.enable = true;
-        this.cache = copyState ? getParameters( gl ) : Object.assign( {}, GL_PARAMETER_DEFAULTS );
+        this.cache = copyState ? getParameters( gl ) : merge( {}, GL_PARAMETER_DEFAULTS );
         this.log = log;
 
         this._updateCache = this._updateCache.bind( this );

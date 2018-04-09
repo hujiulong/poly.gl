@@ -10,7 +10,7 @@ import { log, flipRows, scalePixels } from '../utils';
 import { withParameters } from './context-state';
 import Buffer from './buffer';
 import { glFormatToComponents, glTypeToBytes } from './helpers/format-utils';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 
 // Local constants - will collapse during minification
 const GL_FRAMEBUFFER = 0x8D40;
@@ -201,7 +201,7 @@ export default class Framebuffer extends Resource {
         }
 
         // Overlay the new attachments
-        Object.assign( newAttachments, attachments );
+        merge( newAttachments, attachments );
 
         const prevHandle = this.gl.bindFramebuffer( GL_FRAMEBUFFER, this.handle );
 
@@ -233,7 +233,7 @@ export default class Framebuffer extends Resource {
         this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
 
         // Assign to attachments and remove any nulls to get a clean attachment map
-        Object.assign( this.attachments, attachments );
+        merge( this.attachments, attachments );
         Object.keys( this.attachments ).filter( key => !this.attachments[ key ] ).forEach( key => {
             delete this.attachments[ key ];
         } );

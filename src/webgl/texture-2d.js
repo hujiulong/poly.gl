@@ -1,6 +1,7 @@
 import { GL } from './api';
 import { assertWebGLContext } from './context';
 import Texture from './texture';
+import { merge } from '../utils'
 
 export default class Texture2D extends Texture {
 
@@ -23,7 +24,7 @@ export default class Texture2D extends Texture {
     constructor( gl, opts = {} ) {
         assertWebGLContext( gl );
 
-        super( gl, Object.assign( {}, opts, { target: gl.TEXTURE_2D } ) );
+        super( gl, merge( {}, opts, { target: gl.TEXTURE_2D } ) );
 
         this.initialize( opts );
 

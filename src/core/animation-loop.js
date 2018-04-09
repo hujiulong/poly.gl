@@ -1,10 +1,8 @@
 /* global setTimeout, clearTimeout */
 import { window } from '../utils/globals';
-import { log } from '../utils';
 import { getPageLoadPromise, resizeDrawingBuffer } from '../webgl-utils';
-import { createGLContext, isWebGL, resetParameters } from '../webgl';
-import { Framebuffer } from '../webgl';
-import assert from '../utils/assert';
+import { createGLContext, isWebGL, resetParameters, Framebuffer } from '../webgl';
+import { assert, log, merge } from '../utils';
 
 // Node.js polyfills for requestAnimationFrame and cancelAnimationFrame
 export function requestAnimationFrame( callback ) {
@@ -266,14 +264,14 @@ export default class AnimationLoop {
     // Add application's data to the app context object
     _addCallbackData( appContext ) {
         if ( typeof appContext === 'object' && appContext !== null ) {
-            this._callbackData = Object.assign( {}, this._callbackData, appContext );
+            this._callbackData = merge( {}, this._callbackData, appContext );
         }
     }
 
     // Either uses supplied or existing context, or calls provided callback to create one
     _createWebGLContext( opts ) {
     // Create the WebGL context if necessary
-        opts = Object.assign( {}, opts, DEFAULT_GL_OPTIONS, this.props.glOptions );
+        opts = merge( {}, opts, DEFAULT_GL_OPTIONS, this.props.glOptions );
         this.gl = this.props.gl || this.props.onCreateContext( opts );
 
         if ( !isWebGL( this.gl ) ) {

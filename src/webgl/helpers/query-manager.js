@@ -1,3 +1,4 @@
+import { merge } from '../../utils'
 
 const ERR_DELETED = 'Query was deleted before result was available';
 const ERR_CANCEL = 'Query was canceled before result was available';
@@ -67,7 +68,7 @@ class QueryManager {
             resolvers.resolve = resolve;
             resolvers.reject = reject;
         } );
-        Object.assign( query.promise, resolvers );
+        merge( query.promise, resolvers );
 
         // Add this query to the pending queries
         this.pendingQueries.add( query );

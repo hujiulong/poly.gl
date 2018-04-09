@@ -3,6 +3,7 @@ import { isWebGL2, assertWebGL2Context } from './context';
 import { withParameters } from './context-state';
 import Texture from '../webgl/texture';
 import Buffer from './buffer';
+import { merge } from '../utils'
 
 export default class Texture3D extends Texture {
 
@@ -24,7 +25,7 @@ export default class Texture3D extends Texture {
    */
     constructor( gl, opts = {} ) {
         assertWebGL2Context( gl );
-        super( gl, Object.assign( {}, opts, { target: opts.target || GL.TEXTURE_3D } ) );
+        super( gl, merge( {}, opts, { target: opts.target || GL.TEXTURE_3D } ) );
 
         this.width = null;
         this.height = null;
@@ -38,7 +39,7 @@ export default class Texture3D extends Texture {
     }
 
     initialize( opts = {} ) {
-        this.opts = Object.assign( {}, this.opts, opts );
+        this.opts = merge( {}, this.opts, opts );
         const { pixels, settings } = this.opts;
         if ( settings ) {
             withParameters( settings, () => {

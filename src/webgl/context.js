@@ -7,8 +7,7 @@ import { getCanvas, createContext } from '../webgl-utils';
 import { glGetDebugInfo } from './context-limits';
 import queryManager from './helpers/query-manager';
 
-import { log, isBrowser } from '../utils';
-import assert from '../utils/assert';
+import { assert, log, isBrowser, merge } from '../utils';
 
 // Heuristic testing of contexts (to indentify debug wrappers around gl contexts)
 const GL_ARRAY_BUFFER = 0x8892;
@@ -64,7 +63,7 @@ const contextDefaults = {
  * Main use case is regression test suite.
  */
 export function setContextDefaults( opts = {} ) {
-    Object.assign( contextDefaults, { width: 1, height: 1 }, opts );
+    merge( contextDefaults, { width: 1, height: 1 }, opts );
 }
 
 /*
@@ -72,7 +71,7 @@ export function setContextDefaults( opts = {} ) {
  */
 /* eslint-disable complexity, max-statements */
 export function createGLContext( opts = {} ) {
-    opts = Object.assign( {}, contextDefaults, opts );
+    opts = merge( {}, contextDefaults, opts );
     const { canvas, width, height, throwOnError, manageState } = opts;
 
     // Error reporting function, enables exceptions to be disabled

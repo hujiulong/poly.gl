@@ -1,7 +1,7 @@
 import { assertWebGL2Context } from './context';
 import { getGLTypeFromTypedArray, getTypedArrayFromGLType } from '../utils/typed-array-utils';
 import Resource from './resource';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 
 const GL_COPY_READ_BUFFER = 0x8F36;
 const GL_COPY_WRITE_BUFFER = 0x8F37;
@@ -83,7 +83,7 @@ export default class Buffer extends Resource {
     }
 
     updateLayout( opts ) {
-        Object.assign( this.layout, opts );
+        merge( this.layout, opts );
     }
     // Creates and initializes the buffer object's data store.
     initialize( {
@@ -127,7 +127,7 @@ export default class Buffer extends Resource {
         this.index = index;
 
         // Call after type is set
-        this.setDataLayout( Object.assign( opts ) );
+        this.setDataLayout( merge( opts ) );
 
         // Create the buffer - binding it here for the first time locks the type
         // In WebGL2, use GL_COPY_WRITE_BUFFER to avoid locking the type

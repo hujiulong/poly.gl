@@ -1,7 +1,7 @@
 import { GL } from './gl-constants';
 import Texture from './texture';
 // import {withParameters} from './context';
-import assert from '../utils/assert';
+import { assert, merge } from '../utils';
 
 const FACES = [
     GL.TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -14,7 +14,7 @@ const FACES = [
 
 export default class TextureCube extends Texture {
     constructor( gl, opts = {} ) {
-        super( gl, Object.assign( {}, opts, { target: GL.TEXTURE_CUBE_MAP } ) );
+        super( gl, merge( {}, opts, { target: GL.TEXTURE_CUBE_MAP } ) );
         this.initialize( opts );
         Object.seal( this );
     }

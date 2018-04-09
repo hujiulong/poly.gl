@@ -1,6 +1,7 @@
 /* global window */
 import AnimationLoop, { requestAnimationFrame, cancelAnimationFrame } from './animation-loop';
 import { getPageLoadPromise, createCanvas } from '../webgl-utils';
+import { merge } from '../utils'
 
 export default class AnimationLoopProxy {
 
@@ -9,7 +10,7 @@ export default class AnimationLoopProxy {
     static createWorker( opts ) {
         return self => {
 
-            self.animationLoop = new AnimationLoop( Object.assign( {}, opts, {
+            self.animationLoop = new AnimationLoop( merge( {}, opts, {
                 offScreen: true,
                 // Prevent the animation loop from trying to access DOM properties
                 useDevicePixels: false,
@@ -129,7 +130,7 @@ export default class AnimationLoopProxy {
         // Transfer the offscreen canvas to the worker
         this.props.worker.postMessage( {
             command: 'start',
-            opts: Object.assign( {}, opts, { canvas: offscreenCanvas } )
+            opts: merge( {}, opts, { canvas: offscreenCanvas } )
         }, [ offscreenCanvas ] );
 
         // store the main canvas on the local thread
