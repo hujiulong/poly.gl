@@ -1,3 +1,4 @@
+export { createHeadlessContext } from './create-headless-context';
 // Exports WebGL API constants and types, plus some basic type checks
 export {
     Image,

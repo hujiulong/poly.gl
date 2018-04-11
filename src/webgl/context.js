@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 // WebGLRenderingContext related methods
-import { WebGLRenderingContext, WebGL2RenderingContext } from '../webgl-utils';
+import { WebGLRenderingContext, WebGL2RenderingContext, createHeadlessContext } from '../webgl-utils';
 import trackContextState from '../webgl-utils/track-context-state';
 import { getCanvas, createContext } from '../webgl-utils';
 
@@ -89,6 +89,9 @@ export function createGLContext( opts = {} ) {
         const targetCanvas = getCanvas( { canvas, width, height, onError } );
         // Create a WebGL context in the canvas
         gl = createContext( { canvas: targetCanvas, opts } );
+    } else {
+        // Create a headless-gl context under Node.js
+        gl = createHeadlessContext( { width, height, opts, onError } );
     }
 
     if ( !gl ) {

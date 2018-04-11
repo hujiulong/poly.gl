@@ -8,6 +8,9 @@
 
 import { global } from '../utils/globals';
 
+// Load headless gl dynamically, if available
+import { headlessTypes } from './create-headless-context';
+
 class DummyType {}
 
 const {
@@ -21,7 +24,7 @@ const {
     WebGLUniformLocation = DummyType,
     WebGLActiveInfo = DummyType,
     WebGLShaderPrecisionFormat = DummyType
-} = global;
+} = headlessTypes || global;
 
 export const webGLTypesAvailable =
   WebGLRenderingContext !== DummyType &&
