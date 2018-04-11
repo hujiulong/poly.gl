@@ -1,39 +1,58 @@
 {
-    "name": "poly.gl",
-    "version": "0.0.1",
-    "description": "A WebGL library.",
-    "license": "MIT",
-    "author": "Jiulong Hu <me@hujiulong.com>",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/hujiulong/poly.gl"
-    },
-    "keywords": [
-        "webgl",
-        "3d"
-    ],
-    "main": "dist/poly.js",
-    "module": "dist/poly.esm.js",
-    "scripts": {
-        "build:prod": "rollup -c ./rollup.config.js --environment BUILD:production",
-        "build:dev": "rollup -c ./rollup.config.js --environment BUILD:dev",
-        "build:watch": "npm run build:dev -- --watch",
-        "build": "npm run build:prod",
-        "lint": "eslint --fix src debug test build"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@hujiulong/eslint-config": "^0.0.5",
-        "babel-core": "^6.26.0",
-        "babel-plugin-external-helpers": "^6.22.0",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-minify": "^0.3.0",
-        "eslint": "^4.19.0",
-        "rollup": "^0.57.1",
-        "rollup-plugin-babel": "^3.0.3",
-        "rollup-plugin-commonjs": "^9.1.0",
-        "rollup-plugin-node-resolve": "^3.3.0",
-        "rollup-plugin-shader": "^0.0.3",
-        "rollup-plugin-uglify": "^3.0.0"
-    }
+  "name": "poly.gl",
+  "version": "0.0.1",
+  "description": "A WebGL library.",
+  "license": "MIT",
+  "author": "Jiulong Hu <me@hujiulong.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hujiulong/poly.gl"
+  },
+  "keywords": [
+    "webgl",
+    "3d"
+  ],
+  "main": "dist/poly.cjs.js",
+  "module": "dist/poly.esm.js",
+  "scripts": {
+    "lint": "eslint --fix src scripts test",
+    "dev:cjs": "rollup -w -c scripts/config.js --environment TARGET:cjs",
+    "dev:esm": "rollup -w -c scripts/config.js --environment TARGET:esm",
+    "dev:umd": "rollup -w -c scripts/config.js --environment TARGET:umd",
+    "build": "node scripts/build.js",
+    "build:cjs": "npm run build -- cjs",
+    "build:esm": "npm run build -- esm",
+    "build:umd": "npm run build -- umd,umd-prod",
+    "test": "karma start test/unit/karma.unit.config.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@hujiulong/eslint-config": "^0.0.5",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.0",
+    "gl": "^4.0.4",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-espower-preprocessor": "^1.1.1",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.3",
+    "karma-power-assert": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.3",
+    "mocha": "^5.0.5",
+    "power-assert": "^1.5.0",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-babel-minify": "^4.0.0",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-shader": "^0.0.3",
+    "uglify-js": "^3.3.21",
+    "webpack": "^3.11.0",
+    "zlib": "^1.0.5"
+  }
 }

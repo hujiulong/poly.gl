@@ -7,7 +7,7 @@
 
 const { resolve } = require( 'path' );
 
-const LIB_DIR = resolve( __dirname, '../dist/poly.esm.js' );
+const LIB_DIR = resolve( __dirname, '../src/index.js' );
 
 // Support for hot reloading changes to the library:
 const LOCAL_DEVELOPMENT_CONFIG = {
