@@ -6,9 +6,11 @@ _docs/
 coverage/
 node_modules/
 npm-debug.log
+.reify-cache/
 
 */**/yarn.lock
 yarn-error.log
+
 
 .project
 .DS_Store

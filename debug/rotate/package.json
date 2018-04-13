@@ -1,9 +1,7 @@
 {
   "scripts": {
     "start": "webpack-dev-server --progress --hot --open -d",
-    "start-local": "webpack-dev-server --env.local --progress --hot --open -d",
-    "lib-dev": "cd ../../ & npm run build:watch",
-    "start-test": "run-p lib-dev start-local"
+    "start-local": "webpack-dev-server --env.local --progress --hot --open -d"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2",
