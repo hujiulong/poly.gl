@@ -16,11 +16,6 @@ if ( process.argv[ 2 ] ) {
     builds = builds.filter( b => {
         return filters.some( f => b.output.file.indexOf( f ) > -1 || b._name.indexOf( f ) > -1 )
     } )
-} else {
-    // filter out weex builds by default
-    builds = builds.filter( b => {
-        return b.output.file.indexOf( 'weex' ) === -1
-    } )
 }
 
 build( builds )
@@ -48,7 +43,7 @@ function buildEntry( config ) {
         .then( bundle => bundle.generate( output ) )
         .then( ( { code } ) => {
             if ( isProd ) {
-                var minified = ( banner ? banner + '\n' : '' ) + uglify.minify( code, {
+                const minified = ( banner ? banner + '\n' : '' ) + uglify.minify( code, {
                     output: {
                         ascii_only: true
                     },

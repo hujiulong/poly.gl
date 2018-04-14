@@ -1,13 +1,15 @@
 const path = require( 'path' )
-const buble = require( 'rollup-plugin-buble' )
-const alias = require( 'rollup-plugin-alias' )
+const babel = require( 'rollup-plugin-babel' )
 const cjs = require( 'rollup-plugin-commonjs' )
 const replace = require( 'rollup-plugin-replace' )
 const node = require( 'rollup-plugin-node-resolve' )
-const version = process.env.VERSION || require( '../package.json' ).version
+const uglify = require( 'rollup-plugin-uglify' )
+const minify = require( 'rollup-plugin-babel-minify' )
+const pkg = require( '../package.json' )
+const version = process.env.VERSION || pkg.version
 
 const banner = `/* @preserve
- * poly.gl ${pkg.version}, ${pkg.description}
+ * poly.gl ${version}, ${pkg.description}
  * Copyright (c) 2018 ${pkg.author}
  */
 `;
@@ -36,6 +38,21 @@ const builds = {
         dest: resolve( 'dist/poly.esm.js' ),
         format: 'es',
         banner
+    },
+    // umd
+    'umd': {
+        entry: resolve( 'src/index.js' ),
+        dest: resolve( 'dist/poly.js' ),
+        format: 'umd',
+        moduleName: 'Poly',
+        banner
+    },
+    'umd-prod': {
+        entry: resolve( 'src/index.js' ),
+        dest: resolve( 'dist/poly.min.js' ),
+        format: 'umd',
+        moduleName: 'Poly',
+        banner
     }
 }
 
@@ -45,14 +62,14 @@ function genConfig( name ) {
         input: opts.entry,
         external: opts.external,
         plugins: [
-            buble(),
-            alias( Object.assign( {}, aliases, opts.alias ) )
+            node(),
+            babel()
         ].concat( opts.plugins || [] ),
         output: {
             file: opts.dest,
             format: opts.format,
             banner: opts.banner,
-            name: opts.moduleName || 'Vue'
+            name: opts.moduleName || 'Poly'
         }
     }
 

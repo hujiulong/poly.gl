@@ -4,15 +4,5 @@
             "modules": false
         }]
     ],
-    "env": {
-        "production": {
-            "plugins": ["external-helpers"]
-        },
-        "test": {
-            "presets": [
-                ["env"]
-            ],
-            "plugins": []
-        }
-    }
+    "plugins": ["external-helpers"]
 }
