@@ -6,9 +6,6 @@ import { fixture } from '../../fixtures'
 it( 'WebGL#Texture3D construct/delete', done => {
     const { gl2 } = fixture;
 
-    console.log( '-------' )
-    console.log( isWebGL2( gl2 ) )
-
     assert.throws(
         () => new Texture3D(),
         /.*WebGL.*/,

@@ -29,7 +29,11 @@ module.exports = {
         './index.js'
     ],
     preprocessors: {
-        './index.js': [ 'webpack', 'sourcemap' ],
+        './index.js': [
+            'webpack',
+            'sourcemap',
+            // 'espower'
+        ],
     },
     client: {
         assert: {

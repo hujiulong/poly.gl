@@ -203,8 +203,8 @@ function testFramebufferReadPixels( gl ) {
     framebuffer.resize( { width: 1000, height: 1000 } );
     framebuffer.checkStatus();
 
-    const clearColor = [ 1, 0.5, 0.25, 0.125 ];
-    const expectedColor = [ 255, 128, 64, 32 ];
+    const clearColor = [ 1, 0.4, 0.25, 0.125 ];
+    const expectedColor = [ 255, 102, 64, 32 ];
 
     framebuffer.clear( { color: clearColor } );
 
