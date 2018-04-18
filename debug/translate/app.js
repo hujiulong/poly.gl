@@ -84,12 +84,14 @@ const animationLoop = new AnimationLoop( {
         gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
         program.setUniforms( {
-            uMVMatrix: view.rotateX( 0.1 )
+            uMVMatrix: view.translate( 0.1, 0.1, 0 )
         } );
 
         gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
     }
 } );
+
+console.log( animationLoop )
 
 // expose on Window for standalone example
 window.animationLoop = animationLoop; // eslint-disable-lie
