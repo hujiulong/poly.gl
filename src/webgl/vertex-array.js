@@ -108,27 +108,6 @@ export default class VertexArray extends Resource {
         return this;
     }
 
-    // Set (bind) an array or map of vertex array buffers, either in numbered or
-    // named locations. (named locations requires `locations` to have been provided).
-    // For names that are not present in `location`, the supplied buffers will be ignored.
-    // if a single buffer of type GL.ELEMENT_ARRAY_BUFFER is present, it will be set as elements
-    // @param {Object} buffers - An object map with attribute names being keys
-    //   and values are expected to be instances of Buffer.
-
-    _getBufferAndLayout( bufferData ) {
-    // Check if buffer was supplied
-        let buffer;
-        let layout;
-        if ( bufferData.handle ) {
-            buffer = bufferData;
-            layout = bufferData.layout;
-        } else {
-            buffer = bufferData.buffer;
-            layout = merge( {}, buffer.layout, bufferData.layout || {}, bufferData );
-        }
-        return { buffer, layout };
-    }
-
     setBuffers( buffers, { clear = true } = {} ) {
         if ( clear ) {
             this.clearBindings();
@@ -247,41 +226,6 @@ export default class VertexArray extends Resource {
         }
     }
 
-    _setGenericFloatArray( location, array ) {
-        const { gl } = this;
-        switch ( array.length ) {
-            case 1: gl.vertexAttrib1fv( location, array ); break;
-            case 2: gl.vertexAttrib2fv( location, array ); break;
-            case 3: gl.vertexAttrib3fv( location, array ); break;
-            case 4: gl.vertexAttrib4fv( location, array ); break;
-            default: assert( false );
-        }
-    }
-
-    _setGenericIntArray( location, array ) {
-        const { gl } = this;
-        assert( isWebGL2( gl ) );
-        switch ( array.length ) {
-            case 1: gl.vertexAttribI1iv( location, array ); break;
-            case 2: gl.vertexAttribI2iv( location, array ); break;
-            case 3: gl.vertexAttribI3iv( location, array ); break;
-            case 4: gl.vertexAttribI4iv( location, array ); break;
-            default: assert( false );
-        }
-    }
-
-    _setGenericUintArray( location, array ) {
-        const { gl } = this;
-        assert( isWebGL2( gl ) );
-        switch ( array.length ) {
-            case 1: gl.vertexAttribI1uiv( location, array ); break;
-            case 2: gl.vertexAttribI2uiv( location, array ); break;
-            case 3: gl.vertexAttribI3uiv( location, array ); break;
-            case 4: gl.vertexAttribI4uiv( location, array ); break;
-            default: assert( false );
-        }
-    }
-
     // Specify values for generic vertex attributes
     setGenericValues( location, v0, v1, v2, v3 ) {
         const { gl } = this;
@@ -323,6 +267,63 @@ export default class VertexArray extends Resource {
     }
 
     // PRIVATE
+
+
+    // Set (bind) an array or map of vertex array buffers, either in numbered or
+    // named locations. (named locations requires `locations` to have been provided).
+    // For names that are not present in `location`, the supplied buffers will be ignored.
+    // if a single buffer of type GL.ELEMENT_ARRAY_BUFFER is present, it will be set as elements
+    // @param {Object} buffers - An object map with attribute names being keys
+    //   and values are expected to be instances of Buffer.
+
+    _getBufferAndLayout( bufferData ) {
+    // Check if buffer was supplied
+        let buffer;
+        let layout;
+        if ( bufferData.handle ) {
+            buffer = bufferData;
+            layout = bufferData.layout;
+        } else {
+            buffer = bufferData.buffer;
+            layout = merge( {}, buffer.layout, bufferData.layout || {}, bufferData );
+        }
+        return { buffer, layout };
+    }
+
+    _setGenericFloatArray( location, array ) {
+        const { gl } = this;
+        switch ( array.length ) {
+            case 1: gl.vertexAttrib1fv( location, array ); break;
+            case 2: gl.vertexAttrib2fv( location, array ); break;
+            case 3: gl.vertexAttrib3fv( location, array ); break;
+            case 4: gl.vertexAttrib4fv( location, array ); break;
+            default: assert( false );
+        }
+    }
+
+    _setGenericIntArray( location, array ) {
+        const { gl } = this;
+        assert( isWebGL2( gl ) );
+        switch ( array.length ) {
+            case 1: gl.vertexAttribI1iv( location, array ); break;
+            case 2: gl.vertexAttribI2iv( location, array ); break;
+            case 3: gl.vertexAttribI3iv( location, array ); break;
+            case 4: gl.vertexAttribI4iv( location, array ); break;
+            default: assert( false );
+        }
+    }
+
+    _setGenericUintArray( location, array ) {
+        const { gl } = this;
+        assert( isWebGL2( gl ) );
+        switch ( array.length ) {
+            case 1: gl.vertexAttribI1uiv( location, array ); break;
+            case 2: gl.vertexAttribI2uiv( location, array ); break;
+            case 3: gl.vertexAttribI3uiv( location, array ); break;
+            case 4: gl.vertexAttribI4uiv( location, array ); break;
+            default: assert( false );
+        }
+    }
 
     // Auto detect draw parameters from the complement of buffers provided
     _deduceDrawParameters() {
