@@ -12,18 +12,18 @@
     "webgl",
     "3d"
   ],
-  "main": "dist/poly.cjs.js",
+  "main": "dist/poly.js",
   "module": "dist/poly.esm.js",
   "scripts": {
     "lint": "eslint --fix src scripts test",
-    "dev:cjs": "rollup -w -c scripts/config.js --environment TARGET:cjs",
     "dev:esm": "rollup -w -c scripts/config.js --environment TARGET:esm",
     "dev:umd": "rollup -w -c scripts/config.js --environment TARGET:umd",
-    "build": "node scripts/build.js",
-    "build:cjs": "npm run build -- cjs",
+    "build": "cross-env NODE_ENV=production node scripts/build.js",
     "build:esm": "npm run build -- esm",
     "build:umd": "npm run build -- umd,umd-prod",
-    "test": "karma start test/unit/karma.unit.config.js"
+    "test": "karma start test/unit/karma.unit.config.js",
+    "debug": "webpack-dev-server --inline --progress --config scripts/debug.js",
+    "start": "npm run debug"
   },
   "dependencies": {},
   "devDependencies": {
@@ -32,8 +32,12 @@
     "babel-loader": "^7.1.4",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.4",
     "eslint": "^4.19.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "gl": "^4.0.4",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^3.2.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.1.1",
     "karma-espower-preprocessor": "^1.1.1",
@@ -46,13 +50,12 @@
     "power-assert": "^1.5.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-babel-minify": "^4.0.0",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-shader": "^0.0.3",
     "uglify-js": "^3.3.21",
     "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.2",
     "zlib": "^1.0.5"
   }
 }

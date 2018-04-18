@@ -84,7 +84,7 @@ function getSize( code ) {
 }
 
 function logError( e ) {
-    console.log( e )
+    console.log( e.message.split( '\n' ).shift() )
 }
 
 function blue( str ) {

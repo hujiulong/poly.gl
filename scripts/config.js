@@ -1,10 +1,7 @@
 const path = require( 'path' )
 const babel = require( 'rollup-plugin-babel' )
 const cjs = require( 'rollup-plugin-commonjs' )
-const replace = require( 'rollup-plugin-replace' )
 const node = require( 'rollup-plugin-node-resolve' )
-const uglify = require( 'rollup-plugin-uglify' )
-const minify = require( 'rollup-plugin-babel-minify' )
 const pkg = require( '../package.json' )
 const version = process.env.VERSION || pkg.version
 
@@ -25,13 +22,6 @@ const resolve = p => {
 }
 
 const builds = {
-    // CommonJS
-    'cjs': {
-        entry: resolve( 'src/index.js' ),
-        dest: resolve( 'dist/poly.common.js' ),
-        format: 'cjs',
-        banner
-    },
     // ES Modules
     'esm': {
         entry: resolve( 'src/index.js' ),
@@ -62,6 +52,7 @@ function genConfig( name ) {
         input: opts.entry,
         external: opts.external,
         plugins: [
+            cjs(),
             node(),
             babel()
         ].concat( opts.plugins || [] ),
@@ -71,12 +62,6 @@ function genConfig( name ) {
             banner: opts.banner,
             name: opts.moduleName || 'Poly'
         }
-    }
-
-    if ( opts.env ) {
-        config.plugins.push( replace( {
-            'process.env.NODE_ENV': JSON.stringify( opts.env )
-        } ) )
     }
 
     Object.defineProperty( config, '_name', {
