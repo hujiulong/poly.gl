@@ -78,11 +78,7 @@ export function getDrawingBufferSize( canvas ) {
 // actual device pixels in the hardware framebuffer, allowing us to render at the full
 // resolution of the device.
 export function calculateDrawingBufferSize( canvas, options ) {
-    let { useDevicePixels = true } = options;
-    if ( 'useDevicePixelRatio' in options ) {
-        log.deprecated( 'useDevicePixelRatio', 'useDevicePixels' );
-        useDevicePixels = options.useDevicePixels || options.useDevicePixelRatio;
-    }
+    const { useDevicePixels = true } = options;
     const cssToDevicePixels = useDevicePixels ? window.devicePixelRatio || 1 : 1;
 
     // Lookup the size the browser is displaying the canvas in CSS pixels
@@ -128,14 +124,8 @@ export function resizeCanvas( canvas, {
  * @param {Number} height - new height of canvas in CSS coordinates
  */
 export function resizeDrawingBuffer( canvas, {
-    useDevicePixelRatio = null, // deprecated
     useDevicePixels = true
 } ) {
-    // Resize the render buffer of the canvas to match canvas client size
-    if ( useDevicePixelRatio !== null ) {
-        log.deprecated( 'useDevicePixelRatio', 'useDevicePixels' );
-        useDevicePixels = useDevicePixelRatio;
-    }
     // multiplying with dpr (Optionally can be turned off)
     const newBufferSize = calculateDrawingBufferSize( canvas, { useDevicePixels } );
     // Only update if the canvas size has not changed

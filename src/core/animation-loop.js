@@ -44,14 +44,9 @@ export default class AnimationLoop {
             autoResizeDrawingBuffer = true
         } = props;
 
-        let {
+        const {
             useDevicePixels = true
         } = props;
-
-        if ( 'useDevicePixelRatio' in props ) {
-            log.deprecated( 'useDevicePixelRatio', 'useDevicePixels' );
-            useDevicePixels = props.useDevicePixelRatio;
-        }
 
         this.props = {
             onCreateContext,
@@ -152,28 +147,6 @@ export default class AnimationLoop {
             cancelAnimationFrame( this._animationFrameId );
             this._animationFrameId = null;
             this._stopped = true;
-        }
-        return this;
-    }
-
-    // DEPRECATED METHODS
-
-    // Update parameters
-    setViewParameters( {
-        autoResizeDrawingBuffer = true,
-        autoResizeCanvas = true,
-        autoResizeViewport = true,
-        useDevicePixels = true,
-        useDevicePixelRatio = null // deprecated
-    } ) {
-        log.deprecated( 'AnimationLoop.setViewParameters', 'AnimationLoop.setProps' );
-        this.autoResizeViewport = autoResizeViewport;
-        this.autoResizeCanvas = autoResizeCanvas;
-        this.autoResizeDrawingBuffer = autoResizeDrawingBuffer;
-        this.useDevicePixels = useDevicePixels;
-        if ( useDevicePixelRatio !== null ) {
-            log.deprecated( 'useDevicePixelRatio', 'useDevicePixels' );
-            this.useDevicePixels = useDevicePixelRatio;
         }
         return this;
     }

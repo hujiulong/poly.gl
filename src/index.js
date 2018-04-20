@@ -68,10 +68,6 @@ export const experimental = {
     clearBuffer
 };
 
-// DEPRECATED EXPORTS
-
-// DEPRECATED IN V4.1
-
 export * from './math';
 
 // DEPRECATED IN V3.0

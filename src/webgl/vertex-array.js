@@ -268,7 +268,6 @@ export default class VertexArray extends Resource {
 
     // PRIVATE
 
-
     // Set (bind) an array or map of vertex array buffers, either in numbered or
     // named locations. (named locations requires `locations` to have been provided).
     // For names that are not present in `location`, the supplied buffers will be ignored.
