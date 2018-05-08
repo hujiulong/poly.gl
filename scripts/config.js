@@ -1,4 +1,5 @@
 const path = require( 'path' )
+const json = require( 'rollup-plugin-json' )
 const babel = require( 'rollup-plugin-babel' )
 const cjs = require( 'rollup-plugin-commonjs' )
 const node = require( 'rollup-plugin-node-resolve' )
@@ -52,6 +53,7 @@ function genConfig( name ) {
         input: opts.entry,
         external: opts.external,
         plugins: [
+            json(),
             cjs(),
             node(),
             babel()
