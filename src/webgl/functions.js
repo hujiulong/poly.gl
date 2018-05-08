@@ -1,11 +1,9 @@
 /* eslint-disable */
 // TODO - generic draw call
 // One of the good things about GL is that there are so many ways to draw things
-import GL from './api';
-import {
-    assertWebGLContext,
-    assertWebGL2Context
-} from './context';
+import GL from '../constants';
+import {withParameters} from '../webgl-context';
+import {assertWebGLContext, assertWebGL2Context, getKey} from '../webgl-utils';
 import assert from '../utils/assert';
 
 /**
@@ -27,28 +25,28 @@ import assert from '../utils/assert';
  *
  * @return {ArrayView} - types array, either passed in or autoallocated
  */
-export function readPixels( gl, {
-    x,
-    y,
-    width = 1,
-    height = 1,
-    data,
-    dataOffset = 0,
-    type = GL.UNSIGNED_BYTE,
-    sourceHeight,
-    format = GL.RGBA
-} ) {
-    // Read color in the central pixel, to be mapped with picking colors
-    data = data || new Uint8Array( 4 * width * height );
-    // If source height is specified, a top left coordinate system is used
-    y = sourceHeight ? sourceHeight - y : y;
-    if ( dataOffset ) {
-        assertWebGL2Context( gl );
-        gl.readPixels( x, y, width, height, format, type, data, dataOffset );
-    } else {
-        gl.readPixels( x, y, width, height, format, type, data );
-    }
-    return data;
+export function readPixels(gl, {
+  x,
+  y,
+  width = 1,
+  height = 1,
+  data,
+  dataOffset = 0,
+  type = GL.UNSIGNED_BYTE,
+  sourceHeight,
+  format = GL.RGBA
+}) {
+  // Read color in the central pixel, to be mapped with picking colors
+  data = data || new Uint8Array(4 * width * height);
+  // If source height is specified, a top left coordinate system is used
+  y = sourceHeight ? sourceHeight - y : y;
+  if (dataOffset) {
+    assertWebGL2Context(gl);
+    gl.readPixels(x, y, width, height, format, type, data, dataOffset);
+  } else {
+    gl.readPixels(x, y, width, height, format, type, data);
+  }
+  return data;
 }
 
 /**
@@ -59,37 +57,38 @@ export function readPixels( gl, {
  * @param {Object} options
  * @return {WebGLBuffer} the passed in buffer
  */
-export function readPixelsToBuffer( gl, {
-    x,
-    y,
-    width = 1,
-    height = 1,
-    buffer,
-    dataOffset = 0,
-    type = GL.UNSIGNED_BYTE,
-    sourceHeight,
-    format = GL.RGBA
-} ) {
-    assertWebGL2Context( gl );
+export function readPixelsToBuffer(gl, {
+  x,
+  y,
+  width = 1,
+  height = 1,
+  buffer,
+  dataOffset = 0,
+  type = GL.UNSIGNED_BYTE,
+  sourceHeight,
+  format = GL.RGBA
+}) {
+  assertWebGL2Context(gl);
 
-    // If source height is specified, a top left coordinate system is used
-    y = sourceHeight ? sourceHeight - y : y;
+  // If source height is specified, a top left coordinate system is used
+  y = sourceHeight ? sourceHeight - y : y;
 
-    gl.bindBuffer( GL.PIXEL_PACK_BUFFER, buffer.handle );
+  gl.bindBuffer(GL.PIXEL_PACK_BUFFER, buffer.handle);
 
-    gl.readPixels( x, y, width, height, format, type, dataOffset );
+  gl.readPixels(x, y, width, height, format, type, dataOffset);
 
-    gl.bindBuffer( GL.PIXEL_PACK_BUFFER, null );
+  gl.bindBuffer(GL.PIXEL_PACK_BUFFER, null);
 
-    return buffer;
+  return buffer;
 }
 
 /*
- * @param {} opt.filter
+* @param {} opt.filter
  */
-export function blitFramebuffer( gl, {
-    source: [ sourceX, sourceY, sourceWidth, sourceHeight ],
-    dest: [ destX, destY, destWidth, destHeight ],
-    mask = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT,
-    filter = GL.LINEAR
-} ) {}
+export function blitFramebuffer(gl, {
+  source: [sourceX, sourceY, sourceWidth, sourceHeight],
+  dest: [destX, destY, destWidth, destHeight],
+  mask = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT,
+  filter = GL.LINEAR
+}) {
+}

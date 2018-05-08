@@ -35,6 +35,7 @@ export function isObjectEmpty( obj ) {
     return isEmpty;
 }
 
+// TODO
 // export function merge( target, ...sources ) {
 //
 //     assert( typeof target !== 'object', 'parameter 1 must be a object' );

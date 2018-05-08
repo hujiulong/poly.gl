@@ -1,7 +1,8 @@
 /* global window */
-import AnimationLoop, { requestAnimationFrame, cancelAnimationFrame } from './animation-loop';
-import { getPageLoadPromise, createCanvas } from '../webgl-utils';
-import { merge } from '../utils'
+import AnimationLoop from './animation-loop';
+import { getPageLoadPromise, createCanvas } from '../webgl-context';
+import { requestAnimationFrame, cancelAnimationFrame } from '../webgl-utils';
+import { merge } from '../utils';
 
 export default class AnimationLoopProxy {
 
@@ -146,7 +147,7 @@ export default class AnimationLoopProxy {
             if ( this.width !== width || this.height !== height ) {
                 this.width = width;
                 this.height = height;
-                this.worker.postMessage( {
+                this.props.worker.postMessage( {
                     command: 'resize',
                     width,
                     height

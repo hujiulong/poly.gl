@@ -341,12 +341,12 @@ test('WebGL2#Framebuffer texture attach and read', done => {
       for (const type of types) {
         // texture = new Texture2D(gl2, Object.assign({format, dataFormat, type}));
         // assert.equal(texture.format, format,
-        //   `Texture2D({format: ${glKey(format)}, type: ${glKey(type)}, dataFormat: ${glKey(dataFormat)}) created`);
+        //   `Texture2D({format: ${getKey(format)}, type: ${getKey(type)}, dataFormat: ${getKey(dataFormat)}) created`);
         // texture.delete()
         const data = TEXTURE_DATA[type] || DEFAULT_TEXTURE_DATA;
         texture = new Texture2D(gl2, {format, dataFormat, type, data, width: 1, height: 1});
         assert.equal(texture.format, format,
-          `Texture2D({format: ${glKey(format)}, type: ${glKey(type)}, dataFormat: ${glKey(dataFormat)}) created`);
+          `Texture2D({format: ${getKey(format)}, type: ${getKey(type)}, dataFormat: ${getKey(dataFormat)}) created`);
 
         framebuffer.attach({
           [GL.COLOR_ATTACHMENT0]: texture

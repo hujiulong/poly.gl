@@ -1,5 +1,5 @@
 
-import { GL, Renderbuffer, glKey } from 'poly.gl';
+import { GL, Renderbuffer, getKey } from 'poly.gl';
 
 import { RENDERBUFFER_FORMATS } from 'poly.gl/webgl/renderbuffer';
 
@@ -38,7 +38,7 @@ it( 'WebGL#Renderbuffer format creation', done => {
         if ( Renderbuffer.isSupported( gl, { format } ) ) {
             const renderbuffer = new Renderbuffer( gl, { format } );
             assert.equal( renderbuffer.format, format,
-                `Renderbuffer(${glKey( format )}) created with correct format` );
+                `Renderbuffer(${getKey( format )}) created with correct format` );
             renderbuffer.delete();
         }
     }
@@ -60,7 +60,7 @@ it( 'WebGL2#Renderbuffer format creation', done => {
         if ( Renderbuffer.isSupported( gl2, { format } ) ) {
             const renderbuffer = new Renderbuffer( gl2, { format } );
             assert.equal( renderbuffer.format, format,
-                `Renderbuffer(${glKey( format )}) created with correct format` );
+                `Renderbuffer(${getKey( format )}) created with correct format` );
             renderbuffer.delete();
         }
     }

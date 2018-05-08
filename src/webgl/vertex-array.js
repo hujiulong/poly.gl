@@ -1,8 +1,7 @@
 // WebGL2 VertexArray Objects Helper
-import { glKey } from './gl-constants';
-import { isWebGL2 } from './context';
 import Resource from './resource';
-import { assert, merge, log } from '../utils';
+import { isWebGL2, getKey } from '../webgl-utils';
+import { log, assert, merge } from '../utils';
 
 /* eslint-disable camelcase */
 const OES_vertex_array_object = 'OES_vertex_array_object';
@@ -90,91 +89,6 @@ export default class VertexArray extends Resource {
         return this._filledLocations;
     }
 
-    // Register an optional buffer name to location mapping
-    setLocations( locations ) {
-        this.locations = locations;
-        this.names = {};
-    }
-
-    // Set (bind) an elements buffer, for indexed rendering. Must be GL.ELEMENT_ARRAY_BUFFER
-    setElements( elements ) {
-        assert( !elements || elements.target === GL_ELEMENT_ARRAY_BUFFER, ERR_ELEMENTS );
-
-        this.ext.bindVertexArray( this.handle );
-        this.gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, elements && elements.handle );
-        this.ext.bindVertexArray( null );
-
-        this.elements = elements;
-        return this;
-    }
-
-    setBuffers( buffers, { clear = true } = {} ) {
-        if ( clear ) {
-            this.clearBindings();
-        }
-        const { locations, elements } = this._getLocations( buffers );
-
-        this.ext.bindVertexArray( this.handle );
-
-        // Process locations in order
-        for ( const location in locations ) {
-            const bufferData = locations[ location ];
-            if ( bufferData ) {
-                const { buffer, layout } = this._getBufferAndLayout( bufferData );
-                this.setBuffer( { location, buffer, layout } );
-                this.setDivisor( location, layout.instanced ? 1 : 0 );
-                this.enable( location );
-            } else {
-                // DISABLE MISSING ATTRIBUTE
-                this.disable( location );
-            }
-        }
-        this.buffers = buffers;
-
-        this.ext.bindVertexArray( null );
-
-        if ( elements ) {
-            this.setElements( elements );
-        }
-    }
-
-    // Enable an attribute
-    enable( location ) {
-        this.bind( () => {
-            this.gl.enableVertexAttribArray( location );
-        } );
-    }
-
-    clearBindings( { disableZero = false } = {} ) {
-        this.bind( () => {
-            for ( const location in this._filledLocations ) {
-                if ( this._filledLocations[ location ] && ( location > 0 || disableZero ) ) {
-                    this.gl.disableVertexAttribArray( location );
-                }
-            }
-            this._filledLocations = {};
-        } );
-    }
-
-    // Disable an attribute
-    // Perf penalty when disabling attribute 0:
-    // https://stackoverflow.com/questions/20305231/webgl-warning-attribute-0-is-disabled-
-    // this-has-significant-performance-penalt
-    disable( location, disableZero = false ) {
-        if ( location > 0 || disableZero ) {
-            this.bind( () => {
-                this.gl.disableVertexAttribArray( location );
-            } );
-        }
-    }
-
-    // Set the frequency divisor used for instanced rendering.
-    setDivisor( location, divisor ) {
-        this.bind( () => {
-            this.ext.vertexAttribDivisor( location, divisor );
-        } );
-    }
-
     // Set a location in vertex attributes array to a buffer
     setBuffer( {
         location,
@@ -206,6 +120,97 @@ export default class VertexArray extends Resource {
             }
         } );
 
+    }
+
+    // Set (bind) an array or map of vertex array buffers, either in numbered or
+    // named locations. (named locations requires `locations` to have been provided).
+    // For names that are not present in `location`, the supplied buffers will be ignored.
+    // if a single buffer of type GL.ELEMENT_ARRAY_BUFFER is present, it will be set as elements
+    // @param {Object} buffers - An object map with attribute names being keys
+    //   and values are expected to be instances of Buffer.
+    setBuffers( buffers, { clear = true } = {} ) {
+        if ( clear ) {
+            this.clearBindings();
+        }
+        const { locations, elements } = this._getLocations( buffers );
+
+        this.ext.bindVertexArray( this.handle );
+
+        // Process locations in order
+        for ( const location in locations ) {
+            const bufferData = locations[ location ];
+            if ( bufferData ) {
+                const { buffer, layout } = this._getBufferAndLayout( bufferData );
+                this.setBuffer( { location, buffer, layout } );
+                this.setDivisor( location, layout.instanced ? 1 : 0 );
+                this.enable( location );
+            } else {
+                // DISABLE MISSING ATTRIBUTE
+                this.disable( location );
+            }
+        }
+        this.buffers = buffers;
+
+        this.ext.bindVertexArray( null );
+
+        if ( elements ) {
+            this.setElements( elements );
+        }
+    }
+
+    // Register an optional buffer name to location mapping
+    setLocations( locations ) {
+        this.locations = locations;
+        this.names = {};
+    }
+
+    // Set (bind) an elements buffer, for indexed rendering. Must be GL.ELEMENT_ARRAY_BUFFER
+    setElements( elements ) {
+        assert( !elements || elements.target === GL_ELEMENT_ARRAY_BUFFER, ERR_ELEMENTS );
+
+        this.ext.bindVertexArray( this.handle );
+        this.gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, elements && elements.handle );
+        this.ext.bindVertexArray( null );
+
+        this.elements = elements;
+        return this;
+    }
+
+    clearBindings( { disableZero = false } = {} ) {
+        this.bind( () => {
+            for ( const location in this._filledLocations ) {
+                if ( this._filledLocations[ location ] && ( location > 0 || disableZero ) ) {
+                    this.gl.disableVertexAttribArray( location );
+                }
+            }
+            this._filledLocations = {};
+        } );
+    }
+
+    // Enable an attribute
+    enable( location ) {
+        this.bind( () => {
+            this.gl.enableVertexAttribArray( location );
+        } );
+    }
+
+    // Disable an attribute
+    // Perf penalty when disabling attribute 0:
+    // https://stackoverflow.com/questions/20305231/webgl-warning-attribute-0-is-disabled-
+    // this-has-significant-performance-penalt
+    disable( location, disableZero = false ) {
+        if ( location > 0 || disableZero ) {
+            this.bind( () => {
+                this.gl.disableVertexAttribArray( location );
+            } );
+        }
+    }
+
+    // Set the frequency divisor used for instanced rendering.
+    setDivisor( location, divisor ) {
+        this.bind( () => {
+            this.ext.vertexAttribDivisor( location, divisor );
+        } );
     }
 
     // Specify values for generic vertex attributes
@@ -267,62 +272,6 @@ export default class VertexArray extends Resource {
     }
 
     // PRIVATE
-
-    // Set (bind) an array or map of vertex array buffers, either in numbered or
-    // named locations. (named locations requires `locations` to have been provided).
-    // For names that are not present in `location`, the supplied buffers will be ignored.
-    // if a single buffer of type GL.ELEMENT_ARRAY_BUFFER is present, it will be set as elements
-    // @param {Object} buffers - An object map with attribute names being keys
-    //   and values are expected to be instances of Buffer.
-
-    _getBufferAndLayout( bufferData ) {
-    // Check if buffer was supplied
-        let buffer;
-        let layout;
-        if ( bufferData.handle ) {
-            buffer = bufferData;
-            layout = bufferData.layout;
-        } else {
-            buffer = bufferData.buffer;
-            layout = merge( {}, buffer.layout, bufferData.layout || {}, bufferData );
-        }
-        return { buffer, layout };
-    }
-
-    _setGenericFloatArray( location, array ) {
-        const { gl } = this;
-        switch ( array.length ) {
-            case 1: gl.vertexAttrib1fv( location, array ); break;
-            case 2: gl.vertexAttrib2fv( location, array ); break;
-            case 3: gl.vertexAttrib3fv( location, array ); break;
-            case 4: gl.vertexAttrib4fv( location, array ); break;
-            default: assert( false );
-        }
-    }
-
-    _setGenericIntArray( location, array ) {
-        const { gl } = this;
-        assert( isWebGL2( gl ) );
-        switch ( array.length ) {
-            case 1: gl.vertexAttribI1iv( location, array ); break;
-            case 2: gl.vertexAttribI2iv( location, array ); break;
-            case 3: gl.vertexAttribI3iv( location, array ); break;
-            case 4: gl.vertexAttribI4iv( location, array ); break;
-            default: assert( false );
-        }
-    }
-
-    _setGenericUintArray( location, array ) {
-        const { gl } = this;
-        assert( isWebGL2( gl ) );
-        switch ( array.length ) {
-            case 1: gl.vertexAttribI1uiv( location, array ); break;
-            case 2: gl.vertexAttribI2uiv( location, array ); break;
-            case 3: gl.vertexAttribI3uiv( location, array ); break;
-            case 4: gl.vertexAttribI4uiv( location, array ); break;
-            default: assert( false );
-        }
-    }
 
     // Auto detect draw parameters from the complement of buffers provided
     _deduceDrawParameters() {
@@ -411,6 +360,56 @@ export default class VertexArray extends Resource {
         return { locations, elements };
     }
 
+    _getBufferAndLayout( bufferData ) {
+    // Check if buffer was supplied
+        let buffer;
+        let layout;
+        if ( bufferData.handle ) {
+            buffer = bufferData;
+            layout = bufferData.layout;
+        } else {
+            buffer = bufferData.buffer;
+            layout = merge( {}, buffer.layout, bufferData.layout || {}, bufferData );
+        }
+        return { buffer, layout };
+    }
+
+    // TODO - this doesn't minimize well, choose one of the two API styles?
+    _setGenericFloatArray( location, array ) {
+        const { gl } = this;
+        switch ( array.length ) {
+            case 1: gl.vertexAttrib1fv( location, array ); break;
+            case 2: gl.vertexAttrib2fv( location, array ); break;
+            case 3: gl.vertexAttrib3fv( location, array ); break;
+            case 4: gl.vertexAttrib4fv( location, array ); break;
+            default: assert( false );
+        }
+    }
+
+    _setGenericIntArray( location, array ) {
+        const { gl } = this;
+        assert( isWebGL2( gl ) );
+        switch ( array.length ) {
+            case 1: gl.vertexAttribI1iv( location, array ); break;
+            case 2: gl.vertexAttribI2iv( location, array ); break;
+            case 3: gl.vertexAttribI3iv( location, array ); break;
+            case 4: gl.vertexAttribI4iv( location, array ); break;
+            default: assert( false );
+        }
+    }
+
+    _setGenericUintArray( location, array ) {
+        const { gl } = this;
+        assert( isWebGL2( gl ) );
+        switch ( array.length ) {
+            case 1: gl.vertexAttribI1uiv( location, array ); break;
+            case 2: gl.vertexAttribI2uiv( location, array ); break;
+            case 3: gl.vertexAttribI3uiv( location, array ); break;
+            case 4: gl.vertexAttribI4uiv( location, array ); break;
+            default: assert( false );
+        }
+    }
+
     // RESOURCE IMPLEMENTATION
 
     _createHandle() {
@@ -450,7 +449,7 @@ export default class VertexArray extends Resource {
         return new Array( this.MAX_ATTRIBUTES ).fill( 0 ).map( ( _, location ) => {
             const result = {};
             PARAMETERS.forEach( parameter => {
-                result[ glKey( parameter ) ] = this.getParameter( parameter, { location } );
+                result[ getKey( this.gl, parameter ) ] = this.getParameter( parameter, { location } );
             } );
             return result;
         } );

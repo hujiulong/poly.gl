@@ -1,11 +1,13 @@
 // Avoid generating a lot of big context divs
 import {
     setContextDefaults,
-    createGLContext
-} from 'poly.gl';
-import {
+    createGLContext,
     makeDebugContext
-} from './debug-context'
+} from 'poly.gl';
+
+console.log( '------------' )
+console.log( setContextDefaults )
+console.log( '-----end-----' )
 
 setContextDefaults( {
     width: 1,

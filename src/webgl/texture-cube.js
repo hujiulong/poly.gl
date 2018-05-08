@@ -1,7 +1,6 @@
-import { GL } from './gl-constants';
+import GL from '../constants';
 import Texture from './texture';
-// import {withParameters} from './context';
-import { assert, merge } from '../utils';
+import { assert, merge } from '../utils'
 
 const FACES = [
     GL.TEXTURE_CUBE_MAP_POSITIVE_X,

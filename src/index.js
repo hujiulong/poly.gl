@@ -1,38 +1,54 @@
+import './init';
+
 // WebGL
 export {
-    default as GL,
-    glGet,
-    glKey } from './webgl/gl-constants';
-export {
-    trackContextCreation,
-    trackContextState } from './webgl-utils';
-export {
     isWebGL,
-    isWebGL2,
-    setContextDefaults,
-    createGLContext,
-    deleteGLContext,
-    pollContext } from './webgl/context';
+    isWebGL2 } from './webgl-utils/webgl-checks';
 export {
+    getKeyValue,
+    getKey } from './webgl-utils/constants-to-keys';
+
+export {
+    // context
+    createGLContext,
+    destroyGLContext,
+    resizeGLContext,
+    pollGLContext,
+    setContextDefaults,
+    destroyGLContext as deleteGLContext,
+    pollGLContext as pollContext,
+
+    trackContextCreation,
+    trackContextState,
+
+    // context-state
     resetParameters,
     getParameter,
     getParameters,
     setParameter,
     setParameters,
     withParameters,
-    getModifiedParameters } from './webgl/context-state';
-export {
+    getModifiedParameters,
+
+    // context-limits
     getContextInfo,
     getGLContextInfo,
     getContextLimits,
-    glGetDebugInfo } from './webgl/context-limits';
-export {
+    glGetDebugInfo,
+
+    // context-features
     FEATURES,
     hasFeature,
     hasFeatures,
     getFeatures,
-    canCompileGLGSExtension } from './webgl/context-features';
+    canCompileGLGSExtension,
 
+    // debug context
+    makeDebugContext,
+
+} from './webgl-context';
+
+// WebGL1 classes
 export { default as Buffer } from './webgl/buffer';
 export { Shader, VertexShader, FragmentShader } from './webgl/shader';
 export { default as Program } from './webgl/program';
@@ -44,7 +60,7 @@ export { default as TextureCube } from './webgl/texture-cube';
 export { draw } from './webgl/draw';
 export { clear, clearBuffer } from './webgl/clear';
 
-// WebGL2 & Extensions
+// WebGL2 classes & Extensions
 export { default as FenceSync } from './webgl/fence-sync';
 export { default as Query } from './webgl/query';
 export { default as Sampler } from './webgl/sampler';
@@ -55,22 +71,27 @@ export { default as VertexArray } from './webgl/vertex-array';
 export { default as UniformBufferLayout } from './webgl/uniform-buffer-layout';
 
 // Core Classes
+export { default as Model } from './core/model';
 export { default as AnimationLoop } from './core/animation-loop';
 export { default as AnimationLoopProxy } from './core/animation-loop-proxy';
-// export {default as Object3D} from './core/object-3d';
-// export {default as Group} from './core/group';
+
+// Math
+export * from './math';
 
 // EXPERIMENTAL EXPORTS
 
 import { clearBuffer } from './webgl/clear';
+import { default as Transform } from './core/transform';
 
 export const experimental = {
-    clearBuffer
+    clearBuffer,
+    Transform
 };
 
-export * from './math';
+// DEPRECATED EXPORTS
 
-// DEPRECATED IN V3.0
+export { // Should be optional import for application
+    default as GL } from './constants';
+
 export { readPixels } from './webgl/functions';
-// Alias FramebufferObject to Framebuffer - API is fairly similar
 export { default as FramebufferObject } from './webgl/framebuffer';

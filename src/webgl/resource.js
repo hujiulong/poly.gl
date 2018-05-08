@@ -1,8 +1,7 @@
-import { assertWebGLContext, isWebGL2 } from './context';
-import { glGet, glKey } from './gl-constants';
-import { uid } from '../utils';
-import assert from '../utils/assert';
-import { polyfillContext } from '../webgl-utils';
+import poly from '../init';
+import { polyfillContext } from '../webgl-context';
+import { assertWebGLContext, isWebGL2, getKey, getKeyValue } from '../webgl-utils';
+import { assert, uid } from '../utils';
 
 const ERR_RESOURCE_METHOD_UNDEFINED = 'Resource subclass must define virtual methods';
 
@@ -34,6 +33,7 @@ export default class Resource {
             this._handle = this._createHandle();
         }
 
+        this._addStats();
     }
 
     toString() {
@@ -79,7 +79,7 @@ export default class Resource {
    * @return {GLint|GLfloat|GLenum} param
    */
     getParameter( pname, opts = {} ) {
-        pname = glGet( pname );
+        pname = getKeyValue( this.gl, pname );
         assert( pname );
 
         const parameters = this.constructor.PARAMETERS || {};
@@ -133,10 +133,10 @@ export default class Resource {
         ( !( 'extension' in parameter ) || this.gl.getExtension( parameter.extension ) );
 
             if ( parameterAvailable ) {
-                const key = keys ? glKey( pname ) : pname;
+                const key = keys ? getKey( this.gl, pname ) : pname;
                 values[ key ] = this.getParameter( pname, opts );
                 if ( keys && parameter.type === 'GLenum' ) {
-                    values[ key ] = glKey( values[ key ] );
+                    values[ key ] = getKey( this.gl, values[ key ] );
                 }
             }
         }
@@ -154,7 +154,7 @@ export default class Resource {
    * @return {Resource} returns self to enable chaining
    */
     setParameter( pname, value ) {
-        pname = glGet( pname );
+        pname = getKeyValue( this.gl, pname );
         assert( pname );
 
         const parameters = this.constructor.PARAMETERS || {};
@@ -174,7 +174,7 @@ export default class Resource {
 
             // Handle string keys
             if ( parameter.type === 'GLenum' ) {
-                value = glGet( value );
+                value = getKeyValue( value );
             }
         }
 
@@ -225,4 +225,23 @@ export default class Resource {
         throw new Error( ERR_RESOURCE_METHOD_UNDEFINED );
     }
 
+    // PRIVATE METHODS
+
+    _context() {
+        this.gl.poly = this.gl.poly || {};
+        return this.gl.poly;
+    }
+
+    _addStats() {
+        const name = this.constructor.name;
+
+        const { stats } = poly;
+        stats.resourceCount = stats.resourceCount || 0;
+        stats.resourceMap = stats.resourceMap || {};
+
+        // Resource creation stats
+        stats.resourceCount++;
+        stats.resourceMap[ name ] = stats.resourceMap[ name ] || { count: 0 };
+        stats.resourceMap[ name ].count++;
+    }
 }

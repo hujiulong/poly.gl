@@ -1,5 +1,5 @@
 import { uid } from '../utils';
-import { Vector3, Matrix4 } from 'math.gl';
+import { Vector3, Matrix4 } from '../math';
 import assert from '../utils/assert';
 
 export default class Object3D {
@@ -82,7 +82,7 @@ export default class Object3D {
     // assert(viewMatrix instanceof Matrix4);
         assert( viewMatrix );
         modelMatrix = modelMatrix || this.matrix;
-        const worldMatrix = new Matrix4( viewMatrix ).multiplyRight( modelMatrix );
+        const worldMatrix = new Matrix4( viewMatrix ).multiply( modelMatrix );
         const worldInverse = worldMatrix.invert();
         const worldInverseTranspose = worldInverse.transpose();
 

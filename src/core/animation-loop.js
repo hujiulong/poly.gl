@@ -1,21 +1,11 @@
-/* global setTimeout, clearTimeout */
-import { window } from '../utils/globals';
-import { getPageLoadPromise, resizeDrawingBuffer } from '../webgl-utils';
-import { createGLContext, isWebGL, resetParameters, Framebuffer } from '../webgl';
-import { assert, log, merge } from '../utils';
+import { createGLContext, resizeGLContext, resetParameters } from '../webgl-context';
+import { pageLoadPromise } from '../webgl-context';
+import { makeDebugContext } from '../webgl-context/debug-context';
+import { isWebGL, requestAnimationFrame, cancelAnimationFrame } from '../webgl-utils';
+import { assert, merge } from '../utils';
 
-// Node.js polyfills for requestAnimationFrame and cancelAnimationFrame
-export function requestAnimationFrame( callback ) {
-    return window.requestAnimationFrame
-        ? window.requestAnimationFrame( callback )
-        : setTimeout( callback, 1000 / 60 );
-}
-
-export function cancelAnimationFrame( timerId ) {
-    return window.requestAnimationFrame
-        ? window.cancelAnimationFrame( timerId )
-        : clearTimeout( timerId );
-}
+// TODO - remove dependency on webgl classes
+import { Framebuffer } from '../webgl';
 
 const DEFAULT_GL_OPTIONS = {
     preserveDrawingBuffer: true
@@ -105,14 +95,14 @@ export default class AnimationLoop {
         // console.debug(`Starting ${this.constructor.name}`);
         if ( !this._animationFrameId ) {
             // Wait for start promise before rendering frame
-            this._startPromise = getPageLoadPromise()
+            this._startPromise = pageLoadPromise
                 .then( () => {
                     if ( this._stopped ) {
                         return null;
                     }
 
                     // Create the WebGL context
-                    this._createWebGLContext();
+                    this._createWebGLContext( opts );
                     this._createFramebuffer();
 
                     // Initialize the callback data
@@ -251,6 +241,10 @@ export default class AnimationLoop {
             throw new Error( 'AnimationLoop.onCreateContext - illegal context returned' );
         }
 
+        if ( this.props.debug ) {
+            this.gl = makeDebugContext( this.gl );
+        }
+
         // Reset the WebGL context.
         resetParameters( this.gl );
     }
@@ -266,7 +260,7 @@ export default class AnimationLoop {
     // Optionally multiplying with devicePixel ratio
     _resizeCanvasDrawingBuffer() {
         if ( this.autoResizeDrawingBuffer ) {
-            resizeDrawingBuffer( this.gl.canvas, { useDevicePixels: this.useDevicePixels } );
+            resizeGLContext( this.gl, { useDevicePixels: this.useDevicePixels } );
         }
     }
 

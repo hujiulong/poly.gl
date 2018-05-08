@@ -1,16 +1,20 @@
-import GL from './api';
-import { isWebGL2, ERR_WEBGL2 } from './context';
-import { getFeatures } from './context-features';
-import { clear, clearBuffer } from './clear';
+import GL from '../constants';
+
 import Resource from './resource';
 import Texture2D from './texture-2d';
 import Renderbuffer from './renderbuffer';
-import { getTypedArrayFromGLType, getGLTypeFromTypedArray } from '../utils/typed-array-utils';
-import { log, flipRows, scalePixels } from '../utils';
-import { withParameters } from './context-state';
 import Buffer from './buffer';
-import { glFormatToComponents, glTypeToBytes } from './helpers/format-utils';
-import { assert, merge } from '../utils';
+import { clear, clearBuffer } from './clear';
+
+import { withParameters } from '../webgl-context';
+import { getFeatures } from '../webgl-context/context-features';
+
+import { getTypedArrayFromGLType, getGLTypeFromTypedArray } from '../webgl-utils/typed-array-utils';
+import { glFormatToComponents, glTypeToBytes } from '../webgl-utils/format-utils';
+import { isWebGL2, assertWebGL2Context } from '../webgl-utils';
+import { flipRows, scalePixels } from '../webgl-utils';
+
+import { assert, log, merge } from '../utils';
 
 // Local constants - will collapse during minification
 const GL_FRAMEBUFFER = 0x8D40;
@@ -154,7 +158,7 @@ export default class Framebuffer extends Resource {
         if ( drawBuffers ) {
             this._setDrawBuffers( drawBuffers );
         }
-        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
 
         return this;
     }
@@ -230,7 +234,7 @@ export default class Framebuffer extends Resource {
             }
         }
 
-        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
 
         // Assign to attachments and remove any nulls to get a clean attachment map
         merge( this.attachments, attachments );
@@ -243,7 +247,7 @@ export default class Framebuffer extends Resource {
         const { gl } = this;
         const prevHandle = gl.bindFramebuffer( GL_FRAMEBUFFER, this.handle );
         const status = gl.checkFramebufferStatus( GL_FRAMEBUFFER );
-        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
         if ( status !== gl.FRAMEBUFFER_COMPLETE ) {
             throw new Error( _getFrameBufferStatus( status ) );
         }
@@ -267,7 +271,7 @@ export default class Framebuffer extends Resource {
             clearBuffer( { drawBuffer, value } );
         } );
 
-        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
 
         return this;
     }
@@ -308,7 +312,7 @@ export default class Framebuffer extends Resource {
 
         const prevHandle = this.gl.bindFramebuffer( GL_FRAMEBUFFER, this.handle );
         this.gl.readPixels( x, y, width, height, format, type, pixelArray );
-        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        this.gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
 
         return pixelArray;
     }
@@ -328,7 +332,7 @@ export default class Framebuffer extends Resource {
         const { gl } = this;
 
         // Asynchronus read (PIXEL_PACK_BUFFER) is WebGL2 only feature
-        assert( isWebGL2( gl ) );
+        assertWebGL2Context( gl );
 
         // deduce type if not available.
         type = type || ( buffer ? buffer.type : GL.UNSIGNED_BYTE );
@@ -464,7 +468,7 @@ export default class Framebuffer extends Resource {
         }
 
         gl.readBuffer( prevBuffer );
-        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle );
+        gl.bindFramebuffer( GL_FRAMEBUFFER, prevHandle || null );
         return texture;
     }
 
@@ -483,7 +487,7 @@ export default class Framebuffer extends Resource {
         filter = GL.NEAREST
     } ) {
         const { gl } = this;
-        assert( isWebGL2( gl ), ERR_WEBGL2 );
+        assertWebGL2Context( gl );
 
         if ( !srcFramebuffer.handle && attachment === GL_COLOR_ATTACHMENT0 ) {
             attachment = GL.FRONT;
@@ -526,7 +530,7 @@ export default class Framebuffer extends Resource {
         height
     } ) {
         const { gl } = this;
-        assert( isWebGL2( gl, ERR_WEBGL2 ) );
+        assertWebGL2Context( gl );
         const prevHandle = gl.bindFramebuffer( GL_READ_FRAMEBUFFER, this.handle );
         const invalidateAll = x === 0 && y === 0 && width === undefined && height === undefined;
         if ( invalidateAll ) {

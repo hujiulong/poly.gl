@@ -1,5 +1,4 @@
-import { uid } from '../utils';
-import assert from '../utils/assert';
+import { assert, uid, merge } from '../utils';
 
 // Rendering primitives - specify how to extract primitives from vertices.
 // NOTE: These are numerically identical to the corresponding WebGL/OpenGL constants
@@ -112,7 +111,7 @@ export default class Geometry {
 
             this._autoDetectAttribute( attributeName, attribute );
 
-            this.attributes[ attributeName ] = Object.assign( {}, attribute, {
+            this.attributes[ attributeName ] = merge( {}, attribute, {
                 instanced: attribute.instanced || 0
             } );
         }

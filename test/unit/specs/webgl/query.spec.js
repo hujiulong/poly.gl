@@ -4,7 +4,7 @@
 import { pollContext, Query } from 'poly.gl';
 import util from 'util';
 import { fixture } from '../../fixtures';
-import GL from 'poly.gl/webgl-utils/constants';
+import GL from 'poly.gl/constants';
 
 function testQueryConstructDelete( gl ) {
     const ext = gl.getExtension( 'EXT_disjoint_timer_query' );

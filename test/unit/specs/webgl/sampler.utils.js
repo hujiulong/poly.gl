@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { GL, glKey } from 'poly.gl';
+import { GL, getKey } from 'poly.gl';
 
 // Sampler Parameters
 
@@ -92,7 +92,7 @@ export function testSamplerParameters( { texture, parameters } ) {
             const name = texture.constructor.name;
             const newValue = texture.getParameter( parameter );
             assert.equal( newValue, value,
-                `${name}.setParameters({[${glKey( parameter )}]: ${glKey( value )}}) read back OK` );
+                `${name}.setParameters({[${getKey( parameter )}]: ${getKey( value )}}) read back OK` );
         }
     }
 }

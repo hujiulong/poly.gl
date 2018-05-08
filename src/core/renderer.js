@@ -1,5 +1,6 @@
-import { resizeDrawingBuffer } from '../webgl-utils';
+import { resizeDrawingBuffer, assertWebGLContext } from '../webgl-utils';
 import { createGLContext, clear } from '../webgl';
+import { assert } from '../utils'
 
 export default class Renderer {
     constructor( {
