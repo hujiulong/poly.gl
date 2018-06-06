@@ -119,7 +119,7 @@ function isWebGL2( gl ) {
 
 // A "replacement" gl.getParameter that accepts "enums" from extensions and WebGL2
 // and returns reasonably safe defaults
-export function getParameterPolyfill( gl, originalGetParameter, pname ) {
+export default function getParameterPolyfill( gl, originalGetParameter, pname ) {
 
     // Return mock limits (usually 0) for WebGL2 constants to ensure these
     // can be queries without error

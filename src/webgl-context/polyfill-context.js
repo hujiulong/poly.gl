@@ -9,7 +9,9 @@
 
 /* eslint-disable camelcase, brace-style */
 import assert from '../utils/assert';
-import { getParameterPolyfill } from './polyfill-get-parameter';
+import polyfillVertexArrayObject from './polyfill-vertex-array-object';
+import getParameterPolyfill from './polyfill-get-parameter';
+import { WebGLRenderingContext } from '../webgl-utils';
 
 const OES_vertex_array_object = 'OES_vertex_array_object';
 const ANGLE_instanced_arrays = 'ANGLE_instanced_arrays';
@@ -228,6 +230,7 @@ function installOverrides( gl, { target, target2 } ) {
 
 // Registers polyfill or mock functions for all known extensions
 export default function polyfillContext( gl ) {
+    polyfillVertexArrayObject( WebGLRenderingContext, gl );
     gl.poly = gl.poly || {};
     initializeExtensions( gl );
     if ( !gl.poly.polyfilled ) {

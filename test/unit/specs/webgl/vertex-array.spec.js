@@ -9,12 +9,6 @@ const fixture = {
 it( 'WebGL#VertexArray construct/delete', done => {
     const { gl } = fixture;
 
-    if ( !VertexArray.isSupported( gl ) ) {
-        assert.ok( true, '- VertexArray not supported, skipping tests' );
-        done();
-        return;
-    }
-
     assert.throws(
         () => new VertexArray(),
         'VertexArray throws on missing gl context' );
@@ -69,12 +63,6 @@ it( 'WebGL#VertexAttributes#enable', done => {
 
 it( 'WebGL#vertexAttributes#WebGL2 support', done => {
     const gl = createGLContext( { webgl2: true } );
-
-    if ( !VertexArray.isSupported( gl, { instancedArrays: true } ) ) {
-        assert.ok( true, '- instanced arrays not enabled: skipping tests' );
-        done();
-        return;
-    }
 
     const vertexAttributes = VertexArray.getDefaultArray( gl );
 

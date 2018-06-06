@@ -1,4 +1,4 @@
-import { getParameterPolyfill } from 'poly.gl/webgl-context/polyfill-get-parameter';
+import getParameterPolyfill from 'poly.gl/webgl-context/polyfill-get-parameter';
 import GL from 'poly.gl/constants';
 
 import { fixture } from '../../fixtures';

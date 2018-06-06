@@ -38,10 +38,6 @@ const ERR_ELEMENTS = 'elements must be GL.ELEMENT_ARRAY_BUFFER';
 
 export default class VertexArray extends Resource {
 
-    static isSupported( gl ) {
-        return isWebGL2( gl ) || gl.getExtension( OES_vertex_array_object );
-    }
-
     static getDefaultArray( gl ) {
         gl.poly = gl.poly || {};
         if ( !gl.poly.defaultVertexArray ) {
